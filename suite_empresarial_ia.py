@@ -88,6 +88,9 @@ else:
                             "Estado": [str(reg.get("Estado", "N/A")) for reg in lista_registros]
                         }
 
+                        # Creamos el DataFrame con los datos procesados
+                        df = pd.DataFrame(datos_tabla)
+
                         buffer = io.BytesIO()
                         df.to_excel(buffer, index=False, engine='openpyxl')
                         buffer.seek(0)
