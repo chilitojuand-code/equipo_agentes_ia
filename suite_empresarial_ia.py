@@ -88,12 +88,10 @@ else:
                             "Estado": [str(reg.get("Estado", "N/A")) for reg in lista_registros]
                         }
 
-                        
                         buffer = io.BytesIO()
-                        with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-                            df.to_excel(writer, index=False)
+                        df.to_excel(buffer, index=False, engine='openpyxl')
                         buffer.seek(0)
-                        
+
                         st.success("✅ ¡Análisis de IA con Groq completado con éxito!")
                         st.dataframe(df)
                         
