@@ -73,14 +73,18 @@ else:
                         
                         contenido_respuesta = completion.choices[0].message.content.strip()
                         datos_ia = json.loads(contenido_respuesta)
-                        
+
+                        # Blindaje: Si la IA devuelve una lista, sacamos el primer elemento
+                        if isinstance(datos_ia, list) and len(datos_ia) > 0:
+                                datos_ia = datos_ia
+
                         datos_tabla = {
-                            "Fecha": [datos_ia.get("Fecha", "N/A")],
-                            "Concepto": [datos_ia.get("Concepto", "N/A")],
-                            "Valor": [datos_ia.get("Valor", "N/A")],
-                            "Estado": [datos_ia.get("Estado", "N/A")]
-                        }
-                        df = pd.DataFrame(datos_tabla)
+                                "Fecha": [datos_ia.get("Fecha", "N/A")],
+                                "Concepto": [datos_ia.get("Concepto", "N/A")],
+                                "Valor": [datos_ia.get("Valor", "N/A")],
+                                "Estado": [datos_ia.get("Estado", "N/A")]
+                            }
+                        df = pd.DataFrame(datos_tabla) 
                         
                         buffer = io.BytesIO()
                         with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
