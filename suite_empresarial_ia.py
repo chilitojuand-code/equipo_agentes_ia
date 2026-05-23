@@ -4,7 +4,7 @@ import datetime
 from supabase import create_client, Client
 
 # Credenciales reales de tu base de datos Supabase
-SUPABASE_URL = "https://supabase.co"
+SUPABASE_URL = "https://hyflphiwxgurlquohjmy.supabase.co"
 SUPABASE_KEY = "sb_publishable_--lCuI4ATwR9QFLc5SKJxg_kD54yM4XitxWqfG6LwN5yG3Gv1S"
 
 # Conexión con el servidor en la nube
