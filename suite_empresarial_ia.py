@@ -5,7 +5,7 @@ from supabase import create_client, Client
 
 # Credenciales reales de tu base de datos Supabase
 SUPABASE_URL = "https://hyflphiwxgurlquohjmy.supabase.co"
-SUPABASE_KEY = "sb_publishable_--lCuI4ATwR9QFLc5SKJxg_kD54yM4XitxWqfG6LwN5yG3Gv1S"
+SUPABASE_KEY = "sb_publishable_--lCUi4ATwR9QfLcS5KJxg_kDS4yqdK"
 
 # Conexión con el servidor en la nube
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
