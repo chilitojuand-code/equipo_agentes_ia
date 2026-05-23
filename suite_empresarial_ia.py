@@ -1,4 +1,39 @@
 import streamlit as st
+
+import datetime
+from supabase import create_client, Client
+
+# Credenciales reales de tu base de datos Supabase
+SUPABASE_URL = "https://supabase.co"
+SUPABASE_KEY = "sb_publishable_--lCuI4ATwR9QFLc5SKJxg_kD54yM4XitxWqfG6LwN5yG3Gv1S"
+
+# Conexión con el servidor en la nube
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+def verificar_licencia(codigo_cliente):
+    """Consulta Supabase para validar el código del cliente"""
+    try:
+        respuesta = supabase.table("licencias").select("*").eq("clave", codigo_cliente).execute()
+        datos = respuesta.data
+        
+        if datos:
+            licencia = datos[0]  # Tomamos el primer registro encontrado
+            esta_activa = licencia.get("activa", False)
+            fecha_vencimiento_str = licencia.get("vence_el")
+            
+            if esta_activa and fecha_vencimiento_str:
+                # Convertimos el texto de la fecha a un formato que Python entienda
+                fecha_vence = datetime.datetime.strptime(fecha_vencimiento_str, "%Y-%m-%d").date()
+                if datetime.date.today() <= fecha_vence:
+                    return True, f"✅ Premium Activo hasta: {fecha_vencimiento_str}"
+                else:
+                    return False, "❌ Esta licencia ya expiró."
+            else:
+                return False, "❌ Esta licencia se encuentra desactivada."
+        return False, "🔍 Código de licencia no válido."
+    except Exception as e:
+        return False, f"⚠️ Buscando licencia..."
+
 import time
 import io
 import json
@@ -24,8 +59,24 @@ opcion = st.sidebar.selectbox(
     ["📈 Módulo Contabilidad / Excel", "🏠 Módulo Inmobiliario / Scouting", "📣 Módulo Ventas / WhatsApp"]
 )
 
+# Caja para ingresar la licencia en la barra lateral
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🔑 Activación Premium")
+clave_usuario = st.sidebar.text_input("Ingresa tu clave de acceso:", type="password")
+
+# Por defecto el usuario empieza como demo (no premium)
+es_premium = False
+
+if clave_usuario:
+    valida, mensaje_base_datos = verificar_licencia(clave_usuario)
+    if valida:
+        st.sidebar.success(mensaje_base_datos)
+        es_premium = True
+    else:
+        st.sidebar.error(mensaje_base_datos)
+
 # Control del candado comercial
-if st.session_state.ejecuciones_totales >= 3:
+if st.session_state.ejecuciones_totales >= 3 and not es_premium:
     st.error("🔒 Demo comercial bloqueada. Has agotado tus 3 pruebas globales de la Suite.")
     st.markdown("### Adquiere la licencia completa para desbloquear los 3 módulos ilimitadamente.")
     
