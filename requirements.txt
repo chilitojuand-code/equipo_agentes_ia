@@ -1,5 +1,6 @@
 streamlit
-groq
 pandas
 openpyxl
 python-docx
+supabase
+groq
