@@ -32,7 +32,7 @@ def verificar_licencia(codigo_cliente):
                 return False, "❌ Esta licencia se encuentra desactivada."
         return False, "🔍 Código de licencia no válido."
     except Exception as e:
-        return False, f"⚠️ Buscando licencia..."
+        return False, f"⚠️ Error: {str(e)}"
 
 import time
 import io
